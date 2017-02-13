@@ -66,7 +66,7 @@ typedef NS_ENUM(NSInteger, APIMethod) {
 - (NSURLSessionDataTask *)requestWithMethod:(APIMethod)method url:(NSString *)url params:(NSDictionary *)params success:(Success)success failure:(Failure)failure {
 
     if (![url hasPrefix:@"http"]) {
-        url = [[self class] reponseUrl:url withIds:nil];
+        url = [[self class] reponseUrl:url];
     }
     if ([url rangeOfString:@":id"].length > 0 ) {
         NSAssert(NO, @"路径 「%@」中有需要替换的id", url);
@@ -110,14 +110,8 @@ typedef NS_ENUM(NSInteger, APIMethod) {
     return task;
 }
 
-+ (NSString *)reponseUrl:(NSString *)url withIds:(NSArray<NSString *> *)ids {
++ (NSString *)reponseUrl:(NSString *)url{
     NSString *result = url;
-    for (NSString *itemId in ids) {
-        NSRange range = [result rangeOfString:@":id"];
-        if (range.length > 0) {
-            result = [result stringByReplacingCharactersInRange:range withString:itemId];
-        }
-    }
     result = [NSString stringWithFormat:@"%@\%@", kBaseURL, result];
     return  result;
 }
